@@ -23,6 +23,24 @@ const peerConfigConnections = {
     ]
 }
 
+const RemoteVideo = React.memo(({ stream, socketId }) => {
+    const videoRef = useRef(null);
+
+    useEffect(() => {
+        if (videoRef.current && videoRef.current.srcObject !== stream) {
+            videoRef.current.srcObject = stream;
+        }
+    }, [stream]);
+
+    return (
+        <video
+            data-socket={socketId}
+            ref={videoRef}
+            autoPlay
+        />
+    );
+});
+
 export default function VideoMeetComponent() {
 
     var socketRef = useRef();
@@ -68,7 +86,7 @@ export default function VideoMeetComponent() {
         console.log("HELLO")
         getPermissions();
 
-    })
+    }, [])
 
     let getDislayMedia = () => {
         if (screen) {
@@ -77,7 +95,7 @@ export default function VideoMeetComponent() {
                     .then(getDislayMediaSuccess)
                     .then((stream) => { })
                     .catch((e) => console.log(e))
-            }
+           }
         }
     }
 
@@ -197,10 +215,8 @@ export default function VideoMeetComponent() {
                 .then((stream) => { })
                 .catch((e) => console.log(e))
         } else {
-            try {
-                let tracks = localVideoref.current.srcObject.getTracks()
-                tracks.forEach(track => track.stop())
-            } catch (e) { }
+            let blackSilence = (...args) => new MediaStream([black(...args), silence()])
+            getUserMediaSuccess(blackSilence())
         }
     }
 
@@ -383,8 +399,8 @@ export default function VideoMeetComponent() {
     }
 
     let handleVideo = () => {
-        setVideo(!video);
-        // getUserMedia();
+    setVideo(!video);
+    // getUserMedia();
     }
     let handleAudio = () => {
         setAudio(!audio)
@@ -524,21 +540,14 @@ export default function VideoMeetComponent() {
 
 
                     <video className={styles.meetUserVideo} ref={localVideoref} autoPlay muted></video>
-
-                    <div className={styles.conferenceView}>
+                  
+                     <div className={styles.conferenceView}>
                         {videos.map((video) => (
                             <div key={video.socketId}>
-                                <video
-
-                                    data-socket={video.socketId}
-                                    ref={ref => {
-                                        if (ref && video.stream) {
-                                            ref.srcObject = video.stream;
-                                        }
-                                    }}
-                                    autoPlay
-                                >
-                                </video>
+                                <RemoteVideo
+                                    socketId={video.socketId}
+                                    stream={video.stream}
+                                />
                             </div>
 
                         ))}
