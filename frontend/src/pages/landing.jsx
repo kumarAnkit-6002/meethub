@@ -10,7 +10,7 @@ export default function LandingPage() {
         <div className='landingPageContainer'>
             <nav>
                 <div className='navHeader'>
-                    <h2>MeetHUb</h2>
+                    <h2>MeetHub</h2>
                 </div>
                 <div className='navlist'>
                     <p onClick={() => {
