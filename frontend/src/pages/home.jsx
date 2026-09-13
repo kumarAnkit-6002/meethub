@@ -26,7 +26,7 @@ function HomeComponent() {
 
                 <div style={{ display: "flex", alignItems: "center" }}>
 
-                    <h2>MeetHUb</h2>
+                    <h2>MeetHub</h2>
                 </div>
 
                 <div style={{ display: "flex", alignItems: "center" }}>
